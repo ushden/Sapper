@@ -1,0 +1,60 @@
+body, html {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  position: relative;
+}
+
+.sapper {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  /* border: 2px solid lightblue; */
+  margin: 0 auto;
+  margin-top: 3rem;
+  box-sizing: border-box;
+}
+
+.sapper div {
+  box-sizing: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.square {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+}
+
+.popup {
+  padding: 2rem;
+  position: absolute;
+  top: 10rem;
+  left: 10rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid lightblue;
+  color: blueviolet;
+  font-size: 3rem;
+  background-color: #fff;
+  width: 50%;
+}
+
+.new-game {
+  text-align: center;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+.new-game button {
+  color: aqua;
+  text-transform: uppercase;
+  padding: 2rem;
+  font-size: 2rem;
+}
