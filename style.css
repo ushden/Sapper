@@ -12,10 +12,18 @@ body {
   display: flex;
   flex-wrap: wrap;
   flex-direction: row;
-  /* border: 2px solid lightblue; */
-  margin: 0 auto;
-  margin-top: 3rem;
+  justify-content: center;
   box-sizing: border-box;
+  max-width: 100%;
+}
+
+.sapper-wrap {
+  box-sizing: border-box;
+  margin: 0 auto;
+  border: 2px solid lightblue;
+  margin-top: 3rem;
+  max-width: 100vw;
+  /* padding: 0.2rem; */
 }
 
 .sapper div {
@@ -28,33 +36,40 @@ body {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  font-size: 2rem;
+  font-size: 1.5rem;
 }
 
 .popup {
   padding: 2rem;
   position: absolute;
-  top: 10rem;
-  left: 10rem;
+  top: 12%;
+  left: 15%;
   display: flex;
   justify-content: center;
   align-items: center;
   border: 2px solid lightblue;
   color: blueviolet;
-  font-size: 3rem;
+  font-size: 2rem;
   background-color: #fff;
   width: 50%;
 }
 
-.new-game {
+.settings  {
   text-align: center;
   margin-top: 2rem;
   width: 100%;
 }
 
-.new-game button {
-  color: aqua;
+.hide {
+  display: none;
+}
+
+.settings button {
+  color: white;
   text-transform: uppercase;
-  padding: 2rem;
-  font-size: 2rem;
+  padding: 1rem;
+  font-size: 1rem;
+  background-color: blueviolet;
+  border: 1px solid lightblue;
+  border-radius: 1rem;
 }
