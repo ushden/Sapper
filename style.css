@@ -42,14 +42,14 @@ body {
 .popup {
   padding: 2rem;
   position: absolute;
-  top: 12%;
+  top: 32%;
   left: 15%;
   display: flex;
   justify-content: center;
   align-items: center;
   border: 2px solid lightblue;
   color: blueviolet;
-  font-size: 2rem;
+  font-size: 1.5rem;
   background-color: #fff;
   width: 50%;
 }
@@ -72,4 +72,27 @@ body {
   background-color: blueviolet;
   border: 1px solid lightblue;
   border-radius: 1rem;
+  margin-bottom: 1rem;
+}
+
+.setting-field {
+  display: flex;
+  flex-direction: column;
+}
+
+.setting-field input {
+  padding: 0.2rem;
+  width: 80%;
+  margin: 0 auto;
+  margin-bottom: 1rem;
+}
+
+.complexity {
+  width: 80%;
+  margin: 0 auto;
+  padding: .5rem;
+}
+
+button:disabled {
+  opacity: 0.2;
 }

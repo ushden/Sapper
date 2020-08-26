@@ -8,13 +8,23 @@
 </head>
 <body>
   <div class="settings">
-    <button>Новая игра</button>
+    <button disabled>Новая игра</button>
+    <div class="setting-field">
+      <label for="size">Размер поля от 2 до 20</label>
+      <input type="number" name="size" min="2" max="20" id="size">
+      <label for="complexity">Выбери сложность</label>
+      <select name="complexity" id="complexity" class="complexity">
+        <option value="easy">Изи катка</option>
+        <option value="middle">Типа норм</option>
+        <option value="hard">Жопная боль</option>
+      </select>
+    </div>
     <p class="bomb-count">Количество бомб: <span></span></p>
     <p class="flag-count">Количество флагов: <span></span></p>
   </div> 
   <div class="sapper-wrap">
     <div class="sapper"></div>
   </div>
-  <script src="app.js"></script>
+  <script src="sapper.js"></script>
 </body>
 </html>

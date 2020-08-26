@@ -1,17 +1,57 @@
-function initSapperGame() {
-  'use strict';
+'use strict';
 
-  const size = 6;
+function initSapperGame() {
 
   let bombs = [];
   let numbers = [];
-  const numberColors = ['#785C07', '#fcdf87', '#ef0195', '#1b96f3', '#10133a'];
+  const numberColors = ['#000000', '#785C07', '#ef0195', '#1b96f3', '#10133a'];
+
   const message = {
     lose: 'Ты пидор!',
-    win: 'Ты не пидор! Поздравляю!'
+    win: 'Ты не пидор! Поздравляю!',
+    flag: 'Максимальное количество флагов!'
   };
 
-  const bombFrequency = 0.3;
+  const newGameBtn = document.querySelector('.settings button'); 
+
+  // Настройка игры
+  let settings = {
+    size: 5,
+    bombFrequency: 0.2
+  };
+
+  const fieldSize = document.querySelector('#size');
+  const complexity = document.querySelector('#complexity');
+
+  fieldSize.addEventListener('input', () => {
+    let value = +fieldSize.value;
+
+    if (value >= 2 && value <= 20) {
+      newGameBtn.disabled = false;
+    } else {
+      newGameBtn.disabled = true;
+    }
+
+    settings.size = value;
+  });
+
+  complexity.addEventListener('change', () => {
+    let value = complexity.value;
+
+    if (value === 'easy') {
+      settings.bombFrequency = 0.1;
+    }
+
+    if (value === 'middle') {
+      settings.bombFrequency = 0.5;
+    }
+
+    if (value === 'hard') {
+      settings.bombFrequency = 1;
+    }
+    console.log(settings.size, settings.bombFrequency);
+  });
+
   let flags = 0;
   let flagOnBomb = 0;
 
@@ -33,12 +73,12 @@ function initSapperGame() {
   // Создание игрового поля со всеми даными (Бомбы, цифры, пустые поля)
   function createField() {
 
-    for (let i = 0; i < size ** 2; i++) {
+    for (let i = 0; i < settings.size ** 2; i++) {
       const square = document.createElement('div');
 
       square.classList.add('square');
-      square.style.width = width / size + 'px';
-      square.style.height = width / size + 'px';
+      square.style.width = width / settings.size + 'px';
+      square.style.height = width / settings.size + 'px';
 
       sapper.appendChild(square);
     }
@@ -51,7 +91,7 @@ function initSapperGame() {
     fields.forEach(square => {
       square.dataset.square = `${x},${y}`;
 
-      let randomBoolean = Math.random() < bombFrequency;
+      let randomBoolean = Math.random() < settings.bombFrequency;
 
       if (randomBoolean && !numbers.includes(`${x},${y}`)) {
         bombs.push(`${x},${y}`);
@@ -60,7 +100,7 @@ function initSapperGame() {
           numbers.push(`${x-1},${y}`);
         }
 
-        if (x < size - 1) {
+        if (x < settings.size - 1) {
           numbers.push(`${x+1},${y}`);
         }
 
@@ -68,7 +108,7 @@ function initSapperGame() {
           numbers.push(`${x},${y-1}`);
         }
 
-        if (y < size - 1) {
+        if (y < settings.size - 1) {
           numbers.push(`${x},${y+1}`);
         }
 
@@ -76,20 +116,20 @@ function initSapperGame() {
           numbers.push(`${x-1},${y-1}`);
         }
 
-        if (x < size - 1 && y < size - 1) {
+        if (x < settings.size - 1 && y < settings.size - 1) {
           numbers.push(`${x+1},${y+1}`);
         }
 
-        if (y > 0 && x < size - 1) {
+        if (y > 0 && x < settings.size - 1) {
           numbers.push(`${x+1},${y-1}`);
         }
-        if (x > 0 && y < size - 1) {
+        if (x > 0 && y < settings.size - 1) {
           numbers.push(`${x-1},${y+1}`);
         }
       }
 
       x++;
-      if (x >= size) {
+      if (x >= settings.size) {
         x = 0;
         y++;
       }
@@ -104,7 +144,12 @@ function initSapperGame() {
         event.preventDefault();
         const target = event.currentTarget;
 
-        addFlag(target);
+        if (!target.textContent) {
+          addFlag(target);
+        } else {
+          removeFlag(target);
+        }
+
       });
     });
 
@@ -121,7 +166,6 @@ function initSapperGame() {
 
     showInfo();
   }
-  createField();
 
   // Обработка клика по клетке
   function clickOnSquare(target) {
@@ -132,6 +176,11 @@ function initSapperGame() {
     const coords = target.dataset.square;
     const number = target.dataset.number;
 
+    if (target.textContent === '🚩') {
+      --flags;
+      showInfo();
+    }
+
     if (bombs.includes(coords) && !numbers.includes(coords)) {
       target.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
       target.innerHTML = '&#128163';
@@ -139,17 +188,23 @@ function initSapperGame() {
       showPopup(message.lose);
 
       gameOver = true;
+
+      return;
     }
 
     if (numbers.includes(coords) && !bombs.includes(coords)) {
       target.innerHTML = number;
       target.style.color = numberColors[number];
       target.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+
+      return;
     }
 
     if (!numbers.includes(coords) && !bombs.includes(coords) && !number) {
       target.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
       checkSquare(coords);
+
+      return;
     }
 
   }
@@ -165,7 +220,7 @@ function initSapperGame() {
         let targetW = document.querySelector(`[data-square="${x-1},${y}"`);
         clickOnSquare(targetW);
       }
-      if (x < size - 1) {
+      if (x < settings.size - 1) {
         let targetE = document.querySelector(`[data-square="${x+1},${y}"`);
         clickOnSquare(targetE);
       }
@@ -173,7 +228,7 @@ function initSapperGame() {
         let targetN = document.querySelector(`[data-square="${x},${y-1}"]`);
         clickOnSquare(targetN);
       }
-      if (y < size - 1) {
+      if (y < settings.size - 1) {
         let targetS = document.querySelector(`[data-square="${x},${y+1}"]`);
         clickOnSquare(targetS);
       }
@@ -182,36 +237,47 @@ function initSapperGame() {
         let targetNW = document.querySelector(`[data-square="${x-1},${y-1}"`);
         clickOnSquare(targetNW);
       }
-      if (x < size - 1 && y < size - 1) {
+      if (x < settings.size - 1 && y < settings.size - 1) {
         let targetSE = document.querySelector(`[data-square="${x+1},${y+1}"`);
         clickOnSquare(targetSE);
       }
 
-      if (y > 0 && x < size - 1) {
+      if (y > 0 && x < settings.size - 1) {
         let targetNE = document.querySelector(`[data-square="${x+1},${y-1}"]`);
         clickOnSquare(targetNE);
       }
-      if (x > 0 && y < size - 1) {
+      if (x > 0 && y < settings.size - 1) {
         let targetSW = document.querySelector(`[data-square="${x-1},${y+1}"`);
         clickOnSquare(targetSW);
       }
     }, 10);
   }
 
-  // Постевить флаг на правую кнопку мыши или долгое нажатие на смартфоне
+  // Поставить флаг на правую кнопку мыши или долгое нажатие на смартфоне
   function addFlag(target) {
     const coords = target.dataset.square;
 
-    flags++;
+    if (flags >= bombs.length) {
+      return showPopup(message.flag);
+    }
+
+    target.innerHTML = '&#128681';
 
     if (bombs.includes(coords)) {
       flagOnBomb += 1;
       console.log(flagOnBomb);
     }
 
-    target.innerHTML = '&#128681';
+    flags++;
 
     isWin(flagOnBomb);
+    showInfo();
+  }
+
+  // Удалить флаг
+  function removeFlag(target) {
+    target.innerHTML = '';
+    --flags;
     showInfo();
   }
 
@@ -223,33 +289,43 @@ function initSapperGame() {
   }
 
   // Показать сообщение о победе или проиграше
-  function showPopup(message) {
+  function showPopup(text) {
     const popup = document.createElement('div');
 
+    if (popup.classList.contains('hide')) {
+      popup.classList.remove('hide');
+    }
+
     popup.classList.add('popup');
-    popup.textContent = message;
+    popup.textContent = text;
     document.body.appendChild(popup);
 
+    if (popup.textContent) {
+      setTimeout(() => {
+        popup.classList.add('hide');
+      }, 2500);
+    }
   }
-
-  const newGameBtn = document.querySelector('.settings button');
 
   newGameBtn.addEventListener('click', event => {
     event.preventDefault();
 
-    alert('Пока не работате, обнови страничку, пидр');
-    // restartGame();
+    // alert('Пока не работате, обнови страничку, пидр');
+    restartGame();
   });
 
-  // function restartGame() {
-  //   document.body.innerHTML = '';
+  function restartGame() {
+    sapper.innerHTML = '';
 
-  //   gameOver = false;
-  //   bombs = [];
-  //   numbers = [];
+    gameOver = false;
+    bombs = [];
+    numbers = [];
 
-  //   createField();
-  // }
+    fieldSize.value = '';
+    newGameBtn.disabled = true;
+
+    createField();
+  }
 
   // tests
 }
